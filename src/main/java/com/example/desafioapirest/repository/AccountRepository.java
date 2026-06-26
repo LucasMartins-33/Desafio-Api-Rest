@@ -1,9 +1,17 @@
 package com.example.desafioapirest.repository;
 
 import com.example.desafioapirest.entity.Account;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+
+import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
+    // O @Look avisa ao banco de dados para criar uma fila de espera,
+    // assim ele evita concorrência e as condições de corrida
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<Account> findById(Long id);
 
 }
