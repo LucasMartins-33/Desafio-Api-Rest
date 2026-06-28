@@ -41,7 +41,7 @@ Série de passos para ter o ambiente de desenvolvimento em execução na sua má
 
 1. Clone o repositório:
 ```markdown
-git clone
+git clone https://github.com/LucasMartins-33/Desafio-Api-Rest.git
 ```
 2. Acesse a pasta do projeto via terminal e execute a aplicação:
 ```markdown
@@ -49,13 +49,13 @@ cd desafio-api-rest
 ./mvnw spring-boot:run
 ```
 
-A API estará imediatamente disponível em http://localhost:8080.
+A API estará imediatamente disponível em `http://localhost:8080`.
 
 Acessando o Banco de Dados (H2 Console) para visualizar as tabelas sendo criadas e alteradas em tempo real:
-- **URL** http://localhost:8080/h2-console
-- **JDBC URL** jdbc:h2:mem:transferdb
-- **Usuário** sa
-- **Senha** test123 (Caso queira tirar a senha ou mudar, entre em application.properties em spring.datasource.password)
+- **URL** `http://localhost:8080/h2-console`
+- **JDBC URL** `jdbc:h2:mem:transferdb`
+- **Usuário** `sa`
+- **Senha** `test123` (Caso queira tirar a senha ou mudar, entre em application.properties em spring.datasource.password)
 
 
 
@@ -85,7 +85,7 @@ Estes testes isolam as regras de negócio puras (camada Service). Utilizando JUn
 ## Endpoints da API
 
 1. Criar uma Conta
-**POST** /api/accounts
+**POST** `http://localhost:8080/api/accounts`
 
 - **Request:**
 
@@ -105,7 +105,7 @@ Estes testes isolam as regras de negócio puras (camada Service). Utilizando JUn
 
 
 2. Buscar Conta por ID
-**GET** / api/accounts/{id}
+**GET** `http://localhost:8080/api/accounts/{id}`
 
 - **Response (200 OK):**
 ```markdown
@@ -114,10 +114,10 @@ Estes testes isolam as regras de negócio puras (camada Service). Utilizando JUn
   "balance": 1000.00
 }
 ```
-(Retorna 404 Not Found se ID não Existir no banco de dados)
+(Retorna 400 Bad Request e uma mensagem: Conta não encontrada)
    
 3. Realizar Transferência
-**POST** /api/transfers
+**POST** `http://localhost:8080/api/transfers`
 
 - **Request**
 ```markdown
@@ -127,14 +127,14 @@ Estes testes isolam as regras de negócio puras (camada Service). Utilizando JUn
   "amount": 150.00
 }
 ```
-- **Response (200 OK):** O retorno pode ser apenas um 200 OK
+- **Response (200 OK):** Transferência realizada com sucesso!
 
 ## Respostas de Erro
 
 Erros gerados por validações ou regras de negócio seguem um padrão de resposta amigável
 
 Status HTTP Causa Comum
-400 Bad Request Saldo insuficiente, valores negativos (violação do @PositivoOrZero), IDs iguais.
+400 Bad Request `Saldo insuficiente na conta de origem!`, `O valor da transferência deve ser maior que zero!` (violação do @PositivoOrZero), IDs iguais.
 404 Not Found Conta de origem ou destino inexistente.
 
 ## Teste Rápido (cURL)
@@ -159,10 +159,10 @@ curl http://localhost:8080/api/accounts/2
 
 ## Decisões Técnicas
 
-- **Precisão dos dados:**  Foi utilizado BigDecimal em vez de Double para lidar com todos os valores financeiros, a fim de evitar erros crônicos de arredondamento de ponto flutuante no Java.
-- **Segurança Concorrente:** Utilizado o LockModeType.PESSIMISTIC_WRITE (que traduz para SELECT ... FOR UPDATE no SQL) para criar uma fila de espera no banco de dados,
+- **Precisão dos dados:**  Foi utilizado `BigDecimal` em vez de `Double` para lidar com todos os valores financeiros, a fim de evitar erros crônicos de arredondamento de ponto flutuante no Java.
+- **Segurança Concorrente:** Utilizado o `LockModeType.PESSIMISTIC_WRITE` (que traduz para `SELECT ... FOR UPDATE` no SQL) para criar uma fila de espera no banco de dados,
 protegendo o sistema contra inconsistências caso dois usuários façam transferências no exato mesmo milissegundo.
-- **Separação de Responsabilidade:** O contrato da API foi blindado usando DTOs (Data Transfer Objects), garantindo que as requisições web (JSON) não tenham acesso direto à entidade do banco de dados (JPA Entity).
+- **Separação de Responsabilidade:** O contrato da API foi blindado usando `DTOs` (Data Transfer Objects), garantindo que as requisições web (JSON) não tenham acesso direto à entidade do banco de dados (JPA Entity).
 
 
 
