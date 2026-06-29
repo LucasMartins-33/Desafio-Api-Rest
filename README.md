@@ -43,10 +43,10 @@ Série de passos para ter o ambiente de desenvolvimento em execução na sua má
 ```markdown
 git clone https://github.com/LucasMartins-33/Desafio-Api-Rest.git
 ```
-2. Acesse a pasta do projeto via terminal e execute a aplicação:
+2. Executando a aplicação:
+
 ```markdown
-cd desafio-api-rest
-./mvnw spring-boot:run
+mvn spring-boot:run
 ```
 
 A API estará imediatamente disponível em `http://localhost:8080`.
@@ -71,7 +71,7 @@ Acessando o Banco de Dados (H2 Console) para visualizar as tabelas sendo criadas
 Psra executar a suíte completa de testes automatizados, rode o comando
 
 ```markdown
-./mvnw test
+mvn test
 ```
 
 ### Analise os testes de ponta a ponta (integração)
@@ -134,8 +134,8 @@ Estes testes isolam as regras de negócio puras (camada Service). Utilizando JUn
 Erros gerados por validações ou regras de negócio seguem um padrão de resposta amigável
 
 Status HTTP Causa Comum
-400 Bad Request `Saldo insuficiente na conta de origem!`, `O valor da transferência deve ser maior que zero!` (violação do @PositivoOrZero), IDs iguais.
-404 Not Found Conta de origem ou destino inexistente.
+400 Bad Request `Saldo insuficiente na conta de origem!`, `O valor da transferência deve ser maior que zero!` (violação do @PositivoOrZero), IDs iguais `Não é possível transferir para a mesma conta!`.
+404 Not Found `Conta de origem ou destino inexistente`.
 
 ## Teste Rápido (cURL)
 Caso queira testar o sistema rapidamente pelo terminal:
