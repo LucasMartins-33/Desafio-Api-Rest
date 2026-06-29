@@ -19,6 +19,10 @@ public class TransferService {
     @Transactional
     public void transfer(TransferRequest request) {
 
+        if(request.sourceAccountId().equals(request.targetAccountId())) {
+            throw new IllegalArgumentException("Não é possível transferir para a mesma conta!");
+        }
+
         Account contaOrigem = repository.findById(request.sourceAccountId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta de origem não encontrada."));
 

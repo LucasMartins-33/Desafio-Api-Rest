@@ -80,4 +80,19 @@ public class TransferServiceTest {
         Assertions.assertEquals("Saldo insuficiente na conta de origem!", erroCapturado.getMessage());
         Mockito.verify(repository, Mockito.never()).save(Mockito.any());
     }
+
+    @Test
+    public void deveLancarExcecaoQuandoTransferirParaMesmaConta() {
+        // Arrange
+        TransferRequest request = new TransferRequest(1L, 1L, new BigDecimal("100.00"));
+
+        // Act & Assert
+        IllegalArgumentException erroCapturado = Assertions.assertThrows(
+                IllegalArgumentException.class, () -> transferService.transfer(request)
+        );
+
+        Assertions.assertEquals("Não é possível transferir para a mesma conta!", erroCapturado.getMessage());
+
+        Mockito.verify(repository, Mockito.never()).findById(Mockito.anyLong());
+    }
 }
